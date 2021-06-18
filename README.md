@@ -9,10 +9,14 @@
  
 2.使用点描述符从地图创建平面 3D 世界模型。
 
-3.从 3D-2D 对应关系估计相机姿态： 
+3.从 3D-2D 对应关系估计相机姿态：
+ 
   Homography-based
+
   Motion-only Bundle Adjustment
+
   PNP
+
 4.使用增强现实 (AR) 在相机视图中可视化 3D 世界框架。
 
 5.以 3D 形式可视化相机和世界模型。
