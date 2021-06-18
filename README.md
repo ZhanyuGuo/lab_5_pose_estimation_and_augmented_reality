@@ -5,7 +5,8 @@
 
 #### 环境
 1. python 3.7 or 3.6
-2. 
+2. `pip install opencv-python==3.4.2.16`
+3. `pip install opencv-contrib-python==3.4.2.16`
 
 #### 步骤
 1.校准相机（为了节省时间，我们将使用预先计算的校准结果）。
