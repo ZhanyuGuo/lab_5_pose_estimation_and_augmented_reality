@@ -9,6 +9,7 @@
 3. `pip install opencv-contrib-python==3.4.2.16`
 4. `pip install vtk`
 
+quick install: `pip install -r requirements.txt`
 #### 步骤
 1.校准相机（为了节省时间，我们将使用预先计算的校准结果）。
  
