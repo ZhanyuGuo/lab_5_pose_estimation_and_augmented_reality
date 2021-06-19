@@ -91,8 +91,8 @@ def draw_plots(h_matrix, mask, src_image, dst_image, kp1, kp2, good):
 
 
 def main():
-    src_image = read_image('images/world_A4.png')
-    dst_image = read_image('images/camera_01.jpg')
+    src_image = read_image('../images/world_A4.png')
+    dst_image = read_image('../images/camera_01.jpg')
     kp1, desc1 = find_features(src_image)
     kp2, desc2 = find_features(dst_image)
     #  brute_force_match
