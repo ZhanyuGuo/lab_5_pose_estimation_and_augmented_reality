@@ -17,7 +17,7 @@ A4_PATH = "../images/world_A4.png"
 
 
 class Scene(object):
-    def __init__(self):
+    def __init__(self, path):
         # colors
         self.colors = vtk.vtkNamedColors()
 
@@ -30,7 +30,7 @@ class Scene(object):
         self.initRenWin()
 
         # plane
-        self.initPlane()
+        self.initPlane(path)
 
         # axes
         self.initAxes()
@@ -52,7 +52,7 @@ class Scene(object):
         self.renWin.SetSize(640, 480)
         self.renWin.SetWindowName('Viz')
 
-    def initPlane(self):
+    def initPlane(self, path):
         # plane source
         plane = vtk.vtkPlaneSource()
         # plane size
@@ -61,7 +61,7 @@ class Scene(object):
         plane.SetPoint2(-A4_WIDTH / 2, A4_HEIGHT / 2, 0.0)
         # get png
         pngReader = vtk.vtkPNGReader()
-        pngReader.SetFileName(A4_PATH)
+        pngReader.SetFileName(path)
         # png -> texture
         texture = vtk.vtkTexture()
         texture.SetInputConnection(pngReader.GetOutputPort())
@@ -169,7 +169,7 @@ def thread_func_1():
 
 
 if __name__ == '__main__':
-    scene = Scene()
+    scene = Scene(A4_PATH)
     thread_1 = threading.Thread(target=thread_func_1)
     thread_1.start()
     scene.start()  # spin

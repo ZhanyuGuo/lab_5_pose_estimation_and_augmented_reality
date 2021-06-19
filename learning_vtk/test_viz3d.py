@@ -21,7 +21,7 @@ def thread_func_test():
 
 
 if __name__ == '__main__':
-    scene = Scene()
+    scene = Scene(A4_PATH)
     thread_test = threading.Thread(target=thread_func_test)
     thread_test.start()
     scene.start()
