@@ -30,26 +30,22 @@ def main():
     # estimator
     estimator = Estimator(camera.K)
     h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
-    print(h_matrix_w)
+    # print(h_matrix_w)
 
-    rvec, tvec, T1 = estimator.pnpEstimate(cv2.imread("../images/world_A4.png", cv2.IMREAD_GRAYSCALE), world_points_w,
-                                           image_points,
-                                           camera.K, camera.distort_coef)
-    # print(rvec)
-    # print(tvec)
+    T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
     print(T1)
 
     T2 = estimator.estimate(h_matrix_w, camera.K)
     print(T2)
 
-    scene.camera_callback.setMat(T2)
+    # scene.camera_callback.setMat(T1)
     pass
 
 
 if __name__ == '__main__':
     A4_PATH = "../images/world_A4.png"
-    scene = Scene(A4_PATH)
+    # scene = Scene(A4_PATH)
     main_thread = threading.Thread(target=main)
     main_thread.start()
-    scene.start()
+    # scene.start()
     pass
