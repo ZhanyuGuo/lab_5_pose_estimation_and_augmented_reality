@@ -167,4 +167,4 @@ def calc_T(H1, k):
     T[0:3, -1] = t_hat
     T[3, 3] = 1
     # print("T:\r\n", T)
-    return T
+    return la.inv(T)
