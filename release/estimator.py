@@ -20,11 +20,9 @@ class Estimator(object):
         h_matrix, mask = cal_homography(world_points, image_points)
         return h_matrix, mask
 
-    def estimate(self, world_points, image_points, K):
-        h_matrix, mask = self.findHomo(world_points, image_points)
+    def estimate(self, h_matrix, K):
         T = calc_T(h_matrix, K)
         return T
-        pass
 
     def pnpEstimate(self, src_image, src_pts, dst_pts, camera_matrix, dist_coeffs):
         rvec, tvec = pnp_estimation(src_image, src_pts, dst_pts, camera_matrix, dist_coeffs)
@@ -39,20 +37,20 @@ class Estimator(object):
 
 
 def pnp_estimation(src_image, src_pts, dst_pts, camera_matrix, dist_coeffs):
-    a4_height = 210
-    a4_width = 297
-    rows, cols = src_image.shape
-    src_pts_change = src_pts.reshape((len(src_pts), 2))
-    transfer_matrix = np.zeros((2, 2))
-    transfer_matrix[0][0] = a4_width / cols
-    transfer_matrix[1][1] = a4_height / rows
-    src_pts_change = np.dot(src_pts_change, transfer_matrix)
-    add_zero = np.zeros(len(src_pts))
-    src_pts_change[:, 0] = src_pts_change[:, 0] - a4_width / 2
-    src_pts_change[:, 1] = a4_height / 2 - src_pts_change[:, 1]
-    object_points = np.column_stack((src_pts_change, add_zero))
-    image_points = dst_pts
-    retval, rvec, tvec = cv2.solvePnP(object_points, image_points, camera_matrix, dist_coeffs)
+    # a4_height = 210
+    # a4_width = 297
+    # rows, cols = src_image.shape
+    # src_pts_change = src_pts.reshape((len(src_pts), 2))
+    # transfer_matrix = np.zeros((2, 2))
+    # transfer_matrix[0][0] = a4_width / cols
+    # transfer_matrix[1][1] = a4_height / rows
+    # src_pts_change = np.dot(src_pts_change, transfer_matrix)
+    # add_zero = np.zeros(len(src_pts))
+    # src_pts_change[:, 0] = src_pts_change[:, 0] - a4_width / 2
+    # src_pts_change[:, 1] = a4_height / 2 - src_pts_change[:, 1]
+    # object_points = np.column_stack((src_pts_change, add_zero))
+    # image_points = dst_pts
+    retval, rvec, tvec = cv2.solvePnP(src_pts, dst_pts, camera_matrix, dist_coeffs)
     return rvec, tvec
 
 
@@ -117,9 +115,9 @@ def calc_T(H1, k):
     # H1 = np.array([[4.09640840e-01, - 3.05868789e-02, 7.13250044e+01],
     #                [8.21634025e-02, 2.65324620e-01, 3.62846765e+01],
     #                [1.52533011e-04, - 2.16159793e-04, 1.00000000e+00]])
-    H2 = np.array([[4.09271902e-01, - 3.06034520e-02, 7.14371119e+01],
-                   [8.18744756e-02, 2.65426643e-01, 3.62511724e+01],
-                   [1.52130246e-04, - 2.16354490e-04, 1.00000000e+00]])
+    # H2 = np.array([[4.09271902e-01, - 3.06034520e-02, 7.14371119e+01],
+    #                [8.18744756e-02, 2.65426643e-01, 3.62511724e+01],
+    #                [1.52130246e-04, - 2.16354490e-04, 1.00000000e+00]])
 
     # 相机标定K矩阵 输入
     # k = np.array([[9.4880607969563971e+02, 0., 3.1950000000000000e+02],

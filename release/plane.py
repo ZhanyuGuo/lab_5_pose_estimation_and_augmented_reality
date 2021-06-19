@@ -23,9 +23,27 @@ class Plane(object):
         #  flann_match(knn)
 
         src_pts, dst_pts, good = flann_match(self.kp1, self.kp2, self.desc1, self.desc2)
-        return src_pts, dst_pts, good
+        src_pts_w = pixel2world(src_pts)
+        return src_pts, src_pts_w, dst_pts, good
 
     pass
+
+
+def pixel2world(src_pts):
+    a4_width = 297
+    a4_height = 210
+    cols = 1403
+    rows = 992
+    src_pts_change = src_pts.reshape((len(src_pts), 2))
+    transfer_matrix = np.zeros((2, 2))
+    transfer_matrix[0][0] = a4_width / cols
+    transfer_matrix[1][1] = a4_height / rows
+    src_pts_change = np.dot(src_pts_change, transfer_matrix)
+    add_zero = np.zeros(len(src_pts))
+    src_pts_change[:, 0] = src_pts_change[:, 0] - a4_width / 2
+    src_pts_change[:, 1] = a4_height / 2 - src_pts_change[:, 1]
+    src_pts_change = np.column_stack((src_pts_change, add_zero))
+    return src_pts_change
 
 
 def read_image(filename):

@@ -19,23 +19,27 @@ def main():
 
     # plane
     plane = Plane()
-    frame = cv2.imread('../images/camera_01.jpg', cv2.IMREAD_GRAYSCALE)
+    frame = cv2.imread('../images/camera_03.jpg', cv2.IMREAD_GRAYSCALE)
     undist_image = cv2.undistort(frame, camera.K, camera.distort_coef)
-    world_points, image_points, good = plane.findCorrespondences(undist_image)
+    # cv2.imshow("test", undist_image)
+    # cv2.waitKey(0)
+
+    # _w represent world axis, neither pixel axis.
+    world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
 
     # estimator
     estimator = Estimator(camera.K)
-    h_matrix, mask = estimator.findHomo(world_points, image_points)
-    print(h_matrix)
+    h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
+    print(h_matrix_w)
 
-    rvec, tvec, T1 = estimator.pnpEstimate(cv2.imread("../images/world_A4.png", cv2.IMREAD_GRAYSCALE), world_points,
+    rvec, tvec, T1 = estimator.pnpEstimate(cv2.imread("../images/world_A4.png", cv2.IMREAD_GRAYSCALE), world_points_w,
                                            image_points,
                                            camera.K, camera.distort_coef)
     # print(rvec)
     # print(tvec)
     print(T1)
 
-    T2 = estimator.estimate(world_points, image_points, camera.K)
+    T2 = estimator.estimate(h_matrix_w, camera.K)
     print(T2)
 
     scene.camera_callback.setMat(T1)
