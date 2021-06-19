@@ -11,6 +11,9 @@ from time import sleep
 import numpy as np
 import vtk
 
+A4_WIDTH = 297
+A4_HEIGHT = 210
+
 
 class Scene(object):
     def __init__(self, path):
@@ -165,8 +168,6 @@ def thread_func_1():
 
 
 if __name__ == '__main__':
-    A4_WIDTH = 297
-    A4_HEIGHT = 210
     A4_PATH = "../images/world_A4.png"
     scene = Scene(A4_PATH)
     thread_1 = threading.Thread(target=thread_func_1)

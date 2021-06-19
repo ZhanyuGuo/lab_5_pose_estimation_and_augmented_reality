@@ -23,16 +23,25 @@ def main():
     undist_image = cv2.undistort(frame, camera.K, camera.distort_coef)
     world_points, image_points, good = plane.findCorrespondences(undist_image)
 
+    # estimator
     estimator = Estimator(camera.K)
     h_matrix, mask = estimator.findHomo(world_points, image_points)
     print(h_matrix)
+    rvec, tvec, T = estimator.pnpEstimate(cv2.imread("../images/world_A4.png", cv2.IMREAD_GRAYSCALE), world_points,
+                                          image_points,
+                                          camera.K, camera.distort_coef)
+    print(rvec)
+    print(tvec)
+    print(T)
+
+    scene.camera_callback.setMat(T)
     pass
 
 
 if __name__ == '__main__':
-    A4_PATH = "./images/world_A4.png"
-    # scene = Scene(A4_PATH)
+    A4_PATH = "../images/world_A4.png"
+    scene = Scene(A4_PATH)
     main_thread = threading.Thread(target=main)
     main_thread.start()
-    # scene.start()
+    scene.start()
     pass
