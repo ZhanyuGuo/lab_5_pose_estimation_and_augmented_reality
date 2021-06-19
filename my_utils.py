@@ -34,11 +34,29 @@ def getRotateMatrix(alpha, beta, gamma):
     return r
 
 
+def getRotateAngles(r):
+    if r[2, 0] != 1 and r[2, 0] != -1:
+        beta = np.arctan2(-r[2, 0], np.sqrt(np.power(r[0, 0], 2) + np.power(r[1, 0], 2)))
+        alpha = np.arctan2(r[1, 0], r[0, 0])
+        gamma = np.arctan2(r[2, 1], r[2, 2])
+        pass
+    else:
+        pass
+
+    return alpha, beta, gamma
+
+
 def main():
-    r = getRotateMatrix(60, 60, 90)
+    r = getRotateMatrix(30, 60, 90)
     r3 = r[..., 2].reshape(-1, 1)
+    print(r)
     print(r3)
     print(np.linalg.norm(r3))
+    alpha, beta, gamma = getRotateAngles(r)
+    alpha = np.degrees(alpha)
+    beta = np.degrees(beta)
+    gamma = np.degrees(gamma)
+    print(alpha, beta, gamma)
     pass
 
 
