@@ -18,6 +18,8 @@ def pnp_estimation(src_image, dst_image, camera_matrix, dist_coeffs):
     transfer_matrix[0][0] = a4_width / cols
     transfer_matrix[1][1] = a4_height / rows
     src_pts_change = np.dot(src_pts_change, transfer_matrix)
+    src_pts_change[:, 0] = src_pts_change[:, 0] - a4_width / 2
+    src_pts_change[:, 1] = src_pts_change[:, 1] - a4_height / 2
     add_zero = np.zeros(len(src_pts))
 
     object_points = np.column_stack((src_pts_change, add_zero))

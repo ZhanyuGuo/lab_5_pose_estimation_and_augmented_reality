@@ -27,14 +27,18 @@ def main():
     estimator = Estimator(camera.K)
     h_matrix, mask = estimator.findHomo(world_points, image_points)
     print(h_matrix)
-    rvec, tvec, T = estimator.pnpEstimate(cv2.imread("../images/world_A4.png", cv2.IMREAD_GRAYSCALE), world_points,
-                                          image_points,
-                                          camera.K, camera.distort_coef)
-    print(rvec)
-    print(tvec)
-    print(T)
 
-    scene.camera_callback.setMat(T)
+    rvec, tvec, T1 = estimator.pnpEstimate(cv2.imread("../images/world_A4.png", cv2.IMREAD_GRAYSCALE), world_points,
+                                           image_points,
+                                           camera.K, camera.distort_coef)
+    # print(rvec)
+    # print(tvec)
+    print(T1)
+
+    T2 = estimator.estimate(world_points, image_points, camera.K)
+    print(T2)
+
+    scene.camera_callback.setMat(T1)
     pass
 
 
