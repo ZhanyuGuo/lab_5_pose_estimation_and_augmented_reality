@@ -34,4 +34,3 @@ if __name__ == '__main__':
     fake_main_thread = threading.Thread(target=fake_main)
     fake_main_thread.start()
     scene.start()
-    pass
