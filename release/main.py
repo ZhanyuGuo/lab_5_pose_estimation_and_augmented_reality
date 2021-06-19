@@ -42,7 +42,7 @@ def main():
     T2 = estimator.estimate(h_matrix_w, camera.K)
     print(T2)
 
-    scene.camera_callback.setMat(T1)
+    scene.camera_callback.setMat(T2)
     pass
 
 
