@@ -5,11 +5,11 @@
 # @Email   : 942568052@qq.com
 # @File    : estimator.py
 # @Software: PyCharm
-
 import cv2
 import numpy as np
-from my_utils import getRotateMatrix
 from numpy import linalg as la
+
+from my_utils import getRotateMatrix
 
 
 class Estimator(object):
@@ -22,8 +22,8 @@ class Estimator(object):
         return h_matrix, mask
 
     def estimate(self, h_matrix, K):
-        T = calc_T(h_matrix, K)
-        return T
+        T_wc = calc_T(h_matrix, K)
+        return T_wc
 
     def pnpEstimate(self, src_pts, dst_pts, camera_matrix, dist_coeffs):
         rvec, tvec = pnp_estimation(src_pts, dst_pts, camera_matrix, dist_coeffs)
@@ -161,10 +161,11 @@ def calc_T(H1, k):
     # print("R_hat:\r\n", R_hat)
     # print("t_hat:\r\n", t_hat)
 
-    T = np.mat(np.zeros((4, 4)))
-    # T[0:3, 0:3] = R_hat
-    T[0:3, 0:3] = R
-    T[0:3, -1] = t_hat
-    T[3, 3] = 1
-    # print("T:\r\n", T)
-    return la.inv(T)
+    T_cw = np.mat(np.zeros((4, 4)))
+    # T_cw[0:3, 0:3] = R_hat
+    T_cw[0:3, 0:3] = R
+    T_cw[0:3, -1] = t_hat
+    T_cw[3, 3] = 1
+    # print("T_cw:\r\n", T_cw)
+    T_wc = la.inv(T_cw)
+    return T_wc

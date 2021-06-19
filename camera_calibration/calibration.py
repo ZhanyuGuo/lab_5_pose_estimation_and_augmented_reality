@@ -5,10 +5,10 @@
 # @Email   : czgst@tongji.edu.cn
 # @File    : calibration.py
 # @Software: PyCharm
+import glob
 
 import cv2
 import numpy as np
-import glob
 
 
 def Camera_Cali():

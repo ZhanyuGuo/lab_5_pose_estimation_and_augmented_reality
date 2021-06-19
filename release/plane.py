@@ -28,8 +28,6 @@ class Plane(object):
 
         return src_pts, src_pts_w, dst_pts, good
 
-    pass
-
 
 def pixel2world(src_pts):
     a4_width, a4_height = 297, 210
@@ -48,17 +46,7 @@ def pixel2world(src_pts):
     return src_pts_change
 
 
-def read_image(filename):
-    img = cv2.imread(filename, 0)
-    if img is None:
-        print('Invalid image:' + filename)
-        return None
-    else:
-        print('Image successfully read...')
-        return img
-
-
-def find_features(img):  # sift
+def find_features(img):
     print("Finding Features...")
     sift = cv2.xfeatures2d.SIFT_create()
     keypoints, descriptors = sift.detectAndCompute(img, None)
@@ -104,16 +92,6 @@ def flann_match(kp1, kp2, desc1, desc2, min_match_count=10):
         src_pts = None
         dst_pts = None
     return src_pts, dst_pts, good
-
-
-def cal_homography(src_pts, dst_pts):
-    h_matrix = None
-    mask = None
-    if src_pts.any and dst_pts.any:
-        h_matrix, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
-        return h_matrix, mask
-    else:
-        return h_matrix, mask
 
 
 def draw_plots(h_matrix, mask, src_image, dst_image, kp1, kp2, good):

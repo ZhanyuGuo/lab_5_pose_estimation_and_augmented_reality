@@ -5,21 +5,24 @@
 # @Email   : 942568052@qq.com
 # @File    : main.py
 # @Software: PyCharm
-from scene import Scene
-from camera import Camera
-from plane import Plane
-from estimator import Estimator
 import threading
+
 import cv2
+
+from camera import Camera
+from estimator import Estimator
+from plane import Plane
+from scene import Scene
 
 
 def main():
-    # camera
+    # camera model
     camera = Camera()
 
-    # plane
+    # plane model
     plane = Plane()
 
+    # set real camera
     camera_id = 1
     cap = cv2.VideoCapture(camera_id)
     if not cap.isOpened():
@@ -33,13 +36,18 @@ def main():
     # cv2.imshow("test", undist_image)
     # cv2.waitKey(0)
 
-    # _w represent world axis, neither pixel axis.
+    # xx_w represent world axis, neither pixel axis.
     world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
 
     # estimator
     estimator = Estimator(camera.K)
+    # world_axis <-> pixel
     h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
     # print(h_matrix_w)
+    # pixel <-> pixel
+    h_matrix, mask = estimator.findHomo(world_points, image_points)
+
+    # todo AR using h_matrix
 
     # T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
     # print(T1)
@@ -47,6 +55,7 @@ def main():
     T2 = estimator.estimate(h_matrix_w, camera.K)
     print(T2)
 
+    # set camera in 3d scene
     scene.camera_callback.setMat(T2)
     pass
 

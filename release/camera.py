@@ -17,6 +17,3 @@ class Camera(object):
 
         self.distort_coef = np.array(
             [-6.6329275246245351e-02, -7.9924068274409155e-01, 0.0, 0.0, -1.2647173906695344e+00])
-        pass
-
-    pass
