@@ -73,11 +73,11 @@ def main():
     ren1.SetBackground(colors.GetColor3d('MidnightBlue'))
 
     # transform
-    transform = vtk.vtkTransform()
+    # transform = vtk.vtkTransform()
 
     # transform -> axes
     axes = vtk.vtkAxesActor()
-    axes.SetUserTransform(transform)
+    # axes.SetUserTransform(transform)
     axes.SetTotalLength(30, 30, 30)
 
     # properties of the axes labels can be set as follows
