@@ -102,7 +102,7 @@ def main():
 
     R, r12 = r3_judge(r1, r2)
     # print("r12:", r12)
-    # print("R:", R)
+    print("R:", R)
 
     print("\r\n计算scale_lambda")
     r12 = np.append(r1, r2, axis=1)
