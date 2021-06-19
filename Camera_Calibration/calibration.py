@@ -44,8 +44,8 @@ def Camera_Cali():
     cv2.destroyAllWindows()
 
     # 标定
-    print("-----------------------------------------------------")
-    print("\r\n标定相机所得参数:")
+    print("\r\n-----------------------------------------------------")
+    print("标定相机所得参数:")
     ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, size, None, None)
     print("ret:", ret)
     print("内参数矩阵 mtx:\r\n", mtx)  # 内参数矩阵
