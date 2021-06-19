@@ -5,10 +5,11 @@
 # @Email   : 942568052@qq.com
 # @File    : viz3d.py
 # @Software: PyCharm
-import vtk
-import numpy as np
 import threading
 from time import sleep
+
+import numpy as np
+import vtk
 
 A4_WIDTH = 297
 A4_HEIGHT = 210
@@ -22,19 +23,17 @@ class Scene(object):
 
         # render
         self.ren1 = vtk.vtkRenderer()
-        self.ren1.SetBackground(self.colors.GetColor3d('MidnightBlue'))
+        self.initRender()
 
         # renWin
         self.renWin = vtk.vtkRenderWindow()
-        self.renWin.AddRenderer(self.ren1)
-        self.renWin.SetSize(640, 480)
-        self.renWin.SetWindowName('Viz')
+        self.initRenWin()
 
         # plane
         self.initPlane()
 
         # axes
-        self.InitAxes()
+        self.initAxes()
 
         # camera
         self.cameraActor = vtk.vtkActor()
@@ -42,17 +41,16 @@ class Scene(object):
         self.camera_callback = CameraCallback(self)
         self.renWin.Render()
 
-        pass
-
-    def start(self):
         # interactor
         self.iren = vtk.vtkRenderWindowInteractor()
-        self.iren.SetRenderWindow(self.renWin)
-        self.iren.Initialize()
-        self.iren.CreateRepeatingTimer(1)
-        self.iren.AddObserver('TimerEvent', self.camera_callback.execute)
-        self.iren.Start()
-        pass
+
+    def initRender(self):
+        self.ren1.SetBackground(self.colors.GetColor3d('MidnightBlue'))
+
+    def initRenWin(self):
+        self.renWin.AddRenderer(self.ren1)
+        self.renWin.SetSize(640, 480)
+        self.renWin.SetWindowName('Viz')
 
     def initPlane(self):
         # plane source
@@ -81,9 +79,8 @@ class Scene(object):
         planeActor.SetTexture(texture)
         # planeActor -> ren1
         self.ren1.AddActor(planeActor)
-        pass
 
-    def InitAxes(self):
+    def initAxes(self):
         # axes actor
         axes = vtk.vtkAxesActor()
         # axes property
@@ -96,7 +93,6 @@ class Scene(object):
         z_label.SetColor(self.colors.GetColor3d("Blue"))
         # axes -> ren1
         self.ren1.AddActor(axes)
-        pass
 
     def initCamera(self):
         pyr_points = vtk.vtkPoints()
@@ -129,19 +125,21 @@ class Scene(object):
         self.cameraActor.GetProperty().SetColor(self.colors.GetColor3d("Tomato"))
 
         self.ren1.AddActor(self.cameraActor)
-        pass
+
+    def start(self):
+        self.iren.SetRenderWindow(self.renWin)
+        self.iren.Initialize()
+        self.iren.CreateRepeatingTimer(1)
+        self.iren.AddObserver('TimerEvent', self.camera_callback.execute)
+        self.iren.Start()
 
     def setCameraPose(self, mat):
         obj_mat = vtk.vtkMatrix4x4()
         for i in range(4):
             for j in range(4):
                 obj_mat.SetElement(i, j, mat[i, j])
-                pass
-            pass
-        self.cameraActor.SetUserMatrix(obj_mat)
-        pass
 
-    pass
+        self.cameraActor.SetUserMatrix(obj_mat)
 
 
 class CameraCallback(object):
@@ -151,17 +149,12 @@ class CameraCallback(object):
                              [0, 0, 1, 0],
                              [0, 0, 0, 1]])
         self.scene = scene
-        pass
 
     def execute(self, iren, event):
         self.scene.setCameraPose(self.mat)
-        pass
 
     def setMat(self, mat):
         self.mat = mat
-        pass
-
-    pass
 
 
 def thread_func_1():
@@ -174,12 +167,9 @@ def thread_func_1():
                         [0, 0, 0, 1]])
         scene.camera_callback.setMat(mat)
 
-    pass
-
 
 if __name__ == '__main__':
     scene = Scene()
     thread_1 = threading.Thread(target=thread_func_1)
     thread_1.start()
     scene.start()  # spin
-    pass
