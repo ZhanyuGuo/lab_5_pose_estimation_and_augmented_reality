@@ -83,9 +83,10 @@ def draw_plots(h_matrix, mask, src_image, dst_image, kp1, kp2, good):
                            matchesMask=matches_mask,  # draw only inliers
                            flags=2)
         matches_image = cv2.drawMatches(src_image, kp1, dst_image, kp2, good, None, **draw_params)
-        cv2.imwrite('../images/matching_image.jpg', matches_image)
-        plt.imshow(matches_image, 'gray')
-        plt.show()
+        cv2.imwrite('./images/matching_image.jpg', matches_image)
+        # plt.imshow(matches_image, 'gray')
+        # plt.show()
+        matches_image = cv2.resize(matches_image, (0, 0), fx=0.5, fy=0.5, interpolation=cv2.INTER_NEAREST)
         cv2.imshow('drawMatches', matches_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
