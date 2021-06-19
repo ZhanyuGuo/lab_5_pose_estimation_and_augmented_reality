@@ -9,8 +9,6 @@ import cv2
 import numpy as np
 from numpy import linalg as la
 
-from my_utils import getRotateMatrix
-
 
 class Estimator(object):
     def __init__(self, K):
@@ -28,8 +26,8 @@ class Estimator(object):
     def pnpEstimate(self, src_pts, dst_pts, camera_matrix, dist_coeffs):
         rvec, tvec = pnp_estimation(src_pts, dst_pts, camera_matrix, dist_coeffs)
         rvec = np.degrees(rvec)
-        R = getRotateMatrix(float(rvec[0]), float(rvec[1]), float(rvec[2]))
-        # print(R)
+
+        R, _ = cv2.Rodrigues(rvec)
         tmp = np.hstack((R, tvec))
         T = np.vstack((tmp, np.array([0, 0, 0, 1])))
         return T
