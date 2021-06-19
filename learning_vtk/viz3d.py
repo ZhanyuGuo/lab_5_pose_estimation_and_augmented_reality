@@ -39,12 +39,17 @@ class Scene(object):
         # camera
         self.cameraActor = vtk.vtkActor()
         self.initCamera()
+        self.camera_callback = CameraCallback(self)
         self.renWin.Render()
+
+        pass
+
+    def start(self):
+        # interactor
         self.iren = vtk.vtkRenderWindowInteractor()
         self.iren.SetRenderWindow(self.renWin)
         self.iren.Initialize()
         self.iren.CreateRepeatingTimer(1)
-        self.camera_callback = CameraCallback(self)
         self.iren.AddObserver('TimerEvent', self.camera_callback.execute)
         self.iren.Start()
         pass
@@ -149,7 +154,6 @@ class CameraCallback(object):
         pass
 
     def execute(self, iren, event):
-        # print("in execute")
         self.scene.setCameraPose(self.mat)
         pass
 
@@ -160,17 +164,22 @@ class CameraCallback(object):
     pass
 
 
-def setScene():
-    scene = Scene()
-    pass
+def thread_func_1():
+    print("thread 1")
+    for i in range(360):
+        sleep(0.1)
+        mat = np.array([[np.cos(np.radians(i)), np.sin(np.radians(i)), 0, 0],
+                        [-np.sin(np.radians(i)), np.cos(np.radians(i)), 0, 0],
+                        [0, 0, 1, i],
+                        [0, 0, 0, 1]])
+        scene.camera_callback.setMat(mat)
 
-
-def main():
-    thread1 = threading.Thread(target=setScene)
-    thread1.start()
     pass
 
 
 if __name__ == '__main__':
-    main()
+    scene = Scene()
+    thread_1 = threading.Thread(target=thread_func_1)
+    thread_1.start()
+    scene.start()  # spin
     pass
