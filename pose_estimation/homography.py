@@ -83,8 +83,9 @@ def draw_plots(h_matrix, mask, src_image, dst_image, kp1, kp2, good):
                            matchesMask=matches_mask,  # draw only inliers
                            flags=2)
         matches_image = cv2.drawMatches(src_image, kp1, dst_image, kp2, good, None, **draw_params)
-        cv2.imwrite('images/matching_image.jpg', matches_image)
-        plt.imshow(matches_image, 'gray'), plt.show()
+        cv2.imwrite('../images/matching_image.jpg', matches_image)
+        plt.imshow(matches_image, 'gray')
+        plt.show()
         cv2.imshow('drawMatches', matches_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
@@ -95,11 +96,11 @@ def main():
     dst_image = read_image('../images/camera_01.jpg')
     kp1, desc1 = find_features(src_image)
     kp2, desc2 = find_features(dst_image)
-    #  brute_force_match
+    #  brute_force_match(BFM)
     src_pts, dst_pts, good = brute_force_match(kp1, kp2, desc1, desc2)
     h_matrix, mask = cal_homography(src_pts, dst_pts)
     print(h_matrix)
-    #  flann_match
+    #  flann_match(knn)
     src_pts, dst_pts, good = flann_match(kp1, kp2, desc1, desc2)
     h_matrix, mask = cal_homography(src_pts, dst_pts)
     print(h_matrix)
