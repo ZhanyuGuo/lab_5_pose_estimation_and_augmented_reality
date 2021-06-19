@@ -19,6 +19,15 @@ def main():
 
     # plane
     plane = Plane()
+
+    camera_id = 1
+    cap = cv2.VideoCapture(camera_id)
+    if not cap.isOpened():
+        print("Camera Not Opened.")
+
+    # while True:
+    #     pass
+
     frame = cv2.imread('../images/camera_02.jpg', cv2.IMREAD_GRAYSCALE)
     undist_image = cv2.undistort(frame, camera.K, camera.distort_coef)
     # cv2.imshow("test", undist_image)
