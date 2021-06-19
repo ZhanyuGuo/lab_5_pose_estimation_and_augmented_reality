@@ -153,7 +153,7 @@ def calc_T(H1, k):
     # print("r1:", type(r1), "\r\n", r1)
     # print("r2:", type(r2), "\r\n", r2)
 
-    # R, r12 = r3_judge(r1, r2)
+    R, r12 = r3_judge(r1, r2)
     # print("r12:", r12)
     # print("R:", R)
 
@@ -174,7 +174,8 @@ def calc_T(H1, k):
     # print("t_hat:\r\n", t_hat)
 
     T = np.mat(np.zeros((4, 4)))
-    T[0:3, 0:3] = R_hat
+    # T[0:3, 0:3] = R_hat
+    T[0:3, 0:3] = R
     T[0:3, -1] = t_hat
     T[3, 3] = 1
     # print("T:\r\n", T)
