@@ -22,41 +22,28 @@ class AR(object):
         self.blue = (255, 0, 0)
         pass
 
-    def update(self, img, T, K):
+    def update(self, img, T, K, esimator):
         ar_img = img
+        if esimator.isEstimate:
+            T_cw = la.inv(T)
+            O_P = np.mat(K) * np.mat(T_cw)[0:3, :]
+            X_P = np.mat(K) * np.mat(T_cw)[0:3, :]
+            Y_P = np.mat(K) * np.mat(T_cw)[0:3, :]
+            Z_P = np.mat(K) * np.mat(T_cw)[0:3, :]
+            uO_C = O_P * np.transpose(np.mat(self.origin_))
+            uX_C = X_P * np.transpose(np.mat(self.X_))
+            uY_C = Y_P * np.transpose(np.mat(self.Y_))
+            uZ_C = Z_P * np.transpose(np.mat(self.Z_))
 
-        T_cw = la.inv(T)
-        O_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-        X_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-        Y_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-        Z_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-        # print(O_P)
-        # print(X_P)
-        # print(type(X_P))
+            uO_C = uO_C / uO_C[2][0]
+            uX_C = uX_C / uX_C[2][0]
+            uY_C = uY_C / uY_C[2][0]
+            uZ_C = uZ_C / uZ_C[2][0]
 
-        uO_C = O_P * np.transpose(np.mat(self.origin_))
-        uX_C = X_P * np.transpose(np.mat(self.X_))
-        uY_C = Y_P * np.transpose(np.mat(self.Y_))
-        uZ_C = Z_P * np.transpose(np.mat(self.Z_))
+            cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uX_C[0]), int(uX_C[1])), self.red, 4)
+            cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uY_C[0]), int(uY_C[1])), self.green, 4)
+            cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uZ_C[0]), int(uZ_C[1])), self.blue, 4)
 
-        # print(uO_C)
-        # print(uX_C)
-        # print(uY_C)
-        # print(uZ_C)
-
-        uO_C = uO_C / uO_C[2][0]
-        uX_C = uX_C / uX_C[2][0]
-        uY_C = uY_C / uY_C[2][0]
-        uZ_C = uZ_C / uZ_C[2][0]
-        # print("\r\n输出像素点坐标：")
-        # print(uO_C)
-        # print(uX_C)
-        # print(uY_C)
-        # print(uZ_C)
-
-        cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uX_C[0]), int(uX_C[1])), self.red, 4)
-        cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uY_C[0]), int(uY_C[1])), self.green, 4)
-        cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uZ_C[0]), int(uZ_C[1])), self.blue, 4)
         cv2.imshow('ar scene', ar_img)
 
 

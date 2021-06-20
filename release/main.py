@@ -9,11 +9,11 @@ import threading
 
 import cv2
 
+from ar import AR
 from camera import Camera
 from estimator import Estimator
 from plane import Plane
 from scene import Scene
-from ar import AR
 
 
 def main():
@@ -45,20 +45,21 @@ def main():
 
         # find correspondences, Homography and T_wc
         world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
-        h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
+
+        h_matrix_w, mask = estimator.findHomo(world_points_w, image_points, good)
         T2 = estimator.estimate(h_matrix_w, camera.K)
 
         # visualize in 3D
         scene.camera_callback.setMat(T2)
 
         # ar
-        ar.update(frame, T2, camera.K)
+        ar.update(frame, T2, camera.K, estimator)
 
         if cv2.waitKey(1) >= 0:
             break
         pass
 
-    # frame_C = cv2.imread('../images/camera_03.jpg')
+    # frame_C = cv2.imread('../images/not_found.jpg')
     # frame = cv2.cvtColor(frame_C, cv2.COLOR_BGR2GRAY)
     # # frame = cv2.imread('../images/camera_03.jpg', cv2.IMREAD_GRAYSCALE)
     #
@@ -71,7 +72,7 @@ def main():
     # world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
     #
     # # world_axis <-> pixel
-    # h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
+    # h_matrix_w, mask = estimator.findHomo(world_points_w, image_points, good)
     # # print(h_matrix_w)
     # # pixel <-> pixel
     # # h_matrix, mask = estimator.findHomo(world_points, image_points)
@@ -82,10 +83,11 @@ def main():
     # T2 = estimator.estimate(h_matrix_w, camera.K)
     # print(T2)
     #
-    # ar.update(frame_C, T2, camera.K)
+    # ar.update(frame_C, T2, camera.K, estimator)
     #
     # # set camera in 3d scene
-    # scene.camera_callback.setMat(T2)
+    # # scene.camera_callback.setMat(T2)
+    # # cv2.waitKey(0)
     pass
 
 
