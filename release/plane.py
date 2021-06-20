@@ -48,14 +48,14 @@ def pixel2world(src_pts):
 
 
 def find_features(img):
-    print("Finding Features...")
+    # print("Finding Features...")
     sift = cv2.xfeatures2d.SIFT_create()
     keypoints, descriptors = sift.detectAndCompute(img, None)
     return keypoints, descriptors
 
 
 def brute_force_match(kp1, kp2, desc1, desc2, min_match_count=10):
-    print("Matching Features...")
+    # print("Matching Features...")
     matcher = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
     matches = matcher.match(desc1, desc2)
     matches = sorted(matches, key=lambda x: x.distance)
@@ -76,7 +76,7 @@ def brute_force_match(kp1, kp2, desc1, desc2, min_match_count=10):
 
 def flann_match(kp1, kp2, desc1, desc2, min_match_count=10):
     # assert desc2, "Not enough corners."
-    print("Matching Features...")
+    # print("Matching Features...")
     FLANN_INDEX_KDTREE = 0
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
