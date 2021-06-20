@@ -14,6 +14,7 @@ class Plane(object):
         self.world_image = cv2.imread('../images/world_A4.png')
         self.kp1, self.desc1 = find_features(self.world_image)
         self.kp2, self.desc2 = None, None
+        self.isFound = False
 
     def findCorrespondences(self, frame):
         self.kp2, self.desc2 = find_features(frame)
@@ -22,9 +23,15 @@ class Plane(object):
         # src_pts, dst_pts, good = brute_force_match(self.kp1, self.kp2, self.desc1, self.desc2)
 
         # flann_match(knn)
-        src_pts, dst_pts, good = flann_match(self.kp1, self.kp2, self.desc1, self.desc2)
+        if self.desc2 is not None:
+            src_pts, dst_pts, good, self.isFound = flann_match(self.kp1, self.kp2, self.desc1, self.desc2)
+        else:
+            src_pts, dst_pts, good = None, None, None
 
-        src_pts_w = pixel2world(src_pts)
+        if self.isFound:
+            src_pts_w = pixel2world(src_pts)
+        else:
+            src_pts_w = None
 
         return src_pts, src_pts_w, dst_pts, good
 
@@ -67,11 +74,13 @@ def brute_force_match(kp1, kp2, desc1, desc2, min_match_count=10):
     if len(good) > min_match_count:
         src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
         dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+        isFound = True
     else:
         print("Not enough matches are found - %d/%d" % (len(good), min_match_count))
         src_pts = None
         dst_pts = None
-    return src_pts, dst_pts, good
+        isFound = False
+    return src_pts, dst_pts, good, isFound
 
 
 def flann_match(kp1, kp2, desc1, desc2, min_match_count=10):
@@ -89,11 +98,13 @@ def flann_match(kp1, kp2, desc1, desc2, min_match_count=10):
     if len(good) > min_match_count:
         src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
         dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+        isFound = True
     else:
         print("Not enough matches are found - %d/%d" % (len(good), min_match_count))
         src_pts = None
         dst_pts = None
-    return src_pts, dst_pts, good
+        isFound = False
+    return src_pts, dst_pts, good, isFound
 
 
 def draw_plots(h_matrix, mask, src_image, dst_image, kp1, kp2, good):
