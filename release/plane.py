@@ -74,6 +74,7 @@ def brute_force_match(kp1, kp2, desc1, desc2, min_match_count=10):
 
 
 def flann_match(kp1, kp2, desc1, desc2, min_match_count=10):
+    assert desc2, "Not enough corners."
     print("Matching Features...")
     FLANN_INDEX_KDTREE = 0
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
