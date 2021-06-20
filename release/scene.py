@@ -11,8 +11,8 @@ from time import sleep
 import numpy as np
 import vtk
 
-A4_WIDTH = 297
-A4_HEIGHT = 210
+A4_WIDTH = .297
+A4_HEIGHT = .210
 
 
 class Scene(object):
@@ -83,7 +83,7 @@ class Scene(object):
         # axes actor
         axes = vtk.vtkAxesActor()
         # axes property
-        axes.SetTotalLength(30, 30, 30)
+        axes.SetTotalLength(.030, .030, .030)
         x_label = axes.GetXAxisCaptionActor2D().GetCaptionTextProperty()
         y_label = axes.GetYAxisCaptionActor2D().GetCaptionTextProperty()
         z_label = axes.GetZAxisCaptionActor2D().GetCaptionTextProperty()
@@ -95,11 +95,18 @@ class Scene(object):
 
     def initCamera(self):
         pyr_points = vtk.vtkPoints()
-        p0 = [20.0, 15.0, 20.0]
-        p1 = [-20.0, 15.0, 20.0]
-        p2 = [-20.0, -15.0, 20.0]
-        p3 = [20.0, -15.0, 20.0]
+        # p0 = [20.0, 15.0, 20.0]
+        # p1 = [-20.0, 15.0, 20.0]
+        # p2 = [-20.0, -15.0, 20.0]
+        # p3 = [20.0, -15.0, 20.0]
+        # p4 = [0.0, 0.0, 0.0]
+
+        p0 = [0.02, 0.015, 0.02]
+        p1 = [-0.02, 0.015, 0.02]
+        p2 = [-0.02, -0.015, 0.02]
+        p3 = [0.02, -0.015, 0.02]
         p4 = [0.0, 0.0, 0.0]
+
         pyr_points.InsertNextPoint(p0)
         pyr_points.InsertNextPoint(p1)
         pyr_points.InsertNextPoint(p2)

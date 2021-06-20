@@ -30,7 +30,8 @@ class Plane(object):
 
 
 def pixel2world(src_pts):
-    a4_width, a4_height = 297, 210
+    a4_width, a4_height = .297, .210
+    # a4_width, a4_height = 297, 210
     cols, rows = 1403, 992
 
     src_pts_change = src_pts.reshape((len(src_pts), 2))

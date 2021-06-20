@@ -27,7 +27,7 @@ def main():
     estimator = Estimator(camera.K)
 
     # ar
-    ar = AR(25)
+    ar = AR(0.025)
 
     # # set real camera
     # camera_id = 1
@@ -57,10 +57,12 @@ def main():
     #     if cv2.waitKey(1) >= 0:
     #         break
     #     pass
-
-    frame = cv2.imread('../images/camera_03.jpg', cv2.IMREAD_GRAYSCALE)
     frame_C = cv2.imread('../images/camera_03.jpg')
+    frame = cv2.cvtColor(frame_C, cv2.COLOR_BGR2GRAY)
+    # frame = cv2.imread('../images/camera_03.jpg', cv2.IMREAD_GRAYSCALE)
+
     undist_image = cv2.undistort(frame, camera.K, camera.distort_coef)
+
     # cv2.imshow("test", undist_image)
     # cv2.waitKey(0)
 
@@ -79,7 +81,7 @@ def main():
     T2 = estimator.estimate(h_matrix_w, camera.K)
     print(T2)
 
-    ar.update(frame_C, T2, camera.K)
+    # ar.update(frame_C, T2, camera.K)
 
     # set camera in 3d scene
     # scene.camera_callback.setMat(T2)
