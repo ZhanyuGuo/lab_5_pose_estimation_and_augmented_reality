@@ -13,6 +13,7 @@ from camera import Camera
 from estimator import Estimator
 from plane import Plane
 from scene import Scene
+from ar import AR
 
 
 def main():
@@ -25,58 +26,60 @@ def main():
     # estimator
     estimator = Estimator(camera.K)
 
-    # set real camera
-    camera_id = 1
-    cap = cv2.VideoCapture(camera_id)
-    assert cap.isOpened(), "Camera Not Opened."
+    # ar
+    ar = AR(25)
 
-    while True:
-        # get frame
-        ret, frame = cap.read()
-        assert ret, "Camera Lost."
+    # # set real camera
+    # camera_id = 1
+    # cap = cv2.VideoCapture(camera_id)
+    # assert cap.isOpened(), "Camera Not Opened."
+    #
+    # while True:
+    #     # get frame
+    #     ret, frame = cap.read()
+    #     assert ret, "Camera Lost."
+    #
+    #     # get gray and undistorted image
+    #     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #     undist_image = cv2.undistort(gray_frame, camera.K, camera.distort_coef)
+    #
+    #     # find correspondences, Homography and T_wc
+    #     world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
+    #     h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
+    #     T2 = estimator.estimate(h_matrix_w, camera.K)
+    #
+    #     # visualize in 3D
+    #     scene.camera_callback.setMat(T2)
+    #
+    #     # ar
+    #     cv2.imshow("AR scene", frame)
+    #
+    #     if cv2.waitKey(1) >= 0:
+    #         break
+    #     pass
 
-        # get gray and undistorted image
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        undist_image = cv2.undistort(gray_frame, camera.K, camera.distort_coef)
-
-        # find correspondences, Homography and T_wc
-        world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
-        h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
-        T2 = estimator.estimate(h_matrix_w, camera.K)
-
-        # visualize in 3D
-        scene.camera_callback.setMat(T2)
-
-        # ar
-        cv2.imshow("AR scene", frame)
-
-        if cv2.waitKey(1) >= 0:
-            break
-        pass
-
-    # frame = cv2.imread('../images/camera_03.jpg', cv2.IMREAD_GRAYSCALE)
-    # undist_image = cv2.undistort(frame, camera.K, camera.distort_coef)
+    frame = cv2.imread('../images/camera_03.jpg', cv2.IMREAD_GRAYSCALE)
+    frame_C = cv2.imread('../images/camera_03.jpg')
+    undist_image = cv2.undistort(frame, camera.K, camera.distort_coef)
     # cv2.imshow("test", undist_image)
     # cv2.waitKey(0)
 
     # xx_w represent world axis, neither pixel axis.
-    # world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
+    world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
 
-    # estimator
-    # estimator = Estimator(camera.K)
     # world_axis <-> pixel
-    # h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
-    # print(h_matrix_w)
+    h_matrix_w, mask = estimator.findHomo(world_points_w, image_points)
+    print(h_matrix_w)
     # pixel <-> pixel
-    # h_matrix, mask = estimator.findHomo(world_points, image_points)
-
-    # todo AR using h_matrix
+    h_matrix, mask = estimator.findHomo(world_points, image_points)
 
     # T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
     # print(T1)
 
-    # T2 = estimator.estimate(h_matrix_w, camera.K)
-    # print(T2)
+    T2 = estimator.estimate(h_matrix_w, camera.K)
+    print(T2)
+
+    ar.update(frame_C, T2, camera.K)
 
     # set camera in 3d scene
     # scene.camera_callback.setMat(T2)
@@ -85,8 +88,8 @@ def main():
 
 if __name__ == '__main__':
     A4_PATH = "../images/world_A4.png"
-    scene = Scene(A4_PATH)
+    # scene = Scene(A4_PATH)
     main_thread = threading.Thread(target=main)
     main_thread.start()
-    scene.start()
+    # scene.start()
     pass
