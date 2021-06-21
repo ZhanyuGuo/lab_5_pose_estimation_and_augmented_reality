@@ -17,6 +17,11 @@ class AR(object):
         self.X_ = np.array([axes_length, 0, 0, 1])
         self.Y_ = np.array([0, axes_length, 0, 1])
         self.Z_ = np.array([0, 0, axes_length, 1])
+        self.XY_ = np.array([axes_length, axes_length, 0, 1])
+        self.XZ_ = np.array([axes_length, 0, axes_length, 1])
+        self.YZ_ = np.array([0, axes_length, axes_length, 1])
+        self.ZZ_ = np.array([axes_length, axes_length, axes_length, 1])
+
         self.red = (0, 0, 255)
         self.green = (0, 255, 0)
         self.blue = (255, 0, 0)
@@ -26,23 +31,63 @@ class AR(object):
         ar_img = img
         if esimator.isEstimate:
             T_cw = la.inv(T)
-            O_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-            X_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-            Y_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-            Z_P = np.mat(K) * np.mat(T_cw)[0:3, :]
-            uO_C = O_P * np.transpose(np.mat(self.origin_))
-            uX_C = X_P * np.transpose(np.mat(self.X_))
-            uY_C = Y_P * np.transpose(np.mat(self.Y_))
-            uZ_C = Z_P * np.transpose(np.mat(self.Z_))
+            P = np.mat(K) * np.mat(T_cw)[0:3, :]
+            uO_C = P * np.transpose(np.mat(self.origin_))
+            uX_C = P * np.transpose(np.mat(self.X_))
+            uY_C = P * np.transpose(np.mat(self.Y_))
+            uZ_C = P * np.transpose(np.mat(self.Z_))
+            # 正方体
+            uXY_C = P * np.transpose(np.mat(self.XY_))
+            uXZ_C = P * np.transpose(np.mat(self.XZ_))
+            uYZ_C = P * np.transpose(np.mat(self.YZ_))
+            uZZ_C = P * np.transpose(np.mat(self.ZZ_))
 
             uO_C = uO_C / uO_C[2][0]
             uX_C = uX_C / uX_C[2][0]
             uY_C = uY_C / uY_C[2][0]
             uZ_C = uZ_C / uZ_C[2][0]
+            # 正方体
+            uXY_C = uXY_C / uXY_C[2][0]
+            uXZ_C = uXZ_C / uXZ_C[2][0]
+            uYZ_C = uYZ_C / uYZ_C[2][0]
+            uZZ_C = uZZ_C / uZZ_C[2][0]
 
+            # 坐标系
             cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uX_C[0]), int(uX_C[1])), self.red, 4)
             cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uY_C[0]), int(uY_C[1])), self.green, 4)
             cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uZ_C[0]), int(uZ_C[1])), self.blue, 4)
+
+            # # 正方体
+            # cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uX_C[0]), int(uX_C[1])), self.green, 4)
+            # cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uY_C[0]), int(uY_C[1])), self.green, 4)
+            # cv2.line(ar_img, (int(uXY_C[0]), int(uXY_C[1])), (int(uX_C[0]), int(uX_C[1])), self.green, 4)
+            # cv2.line(ar_img, (int(uXY_C[0]), int(uXY_C[1])), (int(uY_C[0]), int(uY_C[1])), self.green, 4)
+            #
+            # cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uZ_C[0]), int(uZ_C[1])), self.blue, 4)
+            # cv2.line(ar_img, (int(uX_C[0]), int(uX_C[1])), (int(uXZ_C[0]), int(uXZ_C[1])), self.blue, 4)
+            # cv2.line(ar_img, (int(uY_C[0]), int(uY_C[1])), (int(uYZ_C[0]), int(uYZ_C[1])), self.blue, 4)
+            # cv2.line(ar_img, (int(uXY_C[0]), int(uXY_C[1])), (int(uZZ_C[0]), int(uZZ_C[1])), self.blue, 4)
+            #
+            # cv2.line(ar_img, (int(uZ_C[0]), int(uZ_C[1])), (int(uXZ_C[0]), int(uXZ_C[1])), self.red, 4)
+            # cv2.line(ar_img, (int(uZ_C[0]), int(uZ_C[1])), (int(uYZ_C[0]), int(uYZ_C[1])), self.red, 4)
+            # cv2.line(ar_img, (int(uZZ_C[0]), int(uZZ_C[1])), (int(uYZ_C[0]), int(uYZ_C[1])), self.red, 4)
+            # cv2.line(ar_img, (int(uZZ_C[0]), int(uZZ_C[1])), (int(uXZ_C[0]), int(uXZ_C[1])), self.red, 4)
+
+            # subface = []
+            # subface.append((int(uX_C[0]) - int(uO_C[0]), int(uX_C[1]) - int(uO_C[1])))
+            # subface.append((int(uY_C[0]) - int(uO_C[0]), int(uY_C[1]) - int(uO_C[1])))
+            # subface.append((int(uXY_C[0]) - int(uX_C[0]), int(uXY_C[1]) - int(uX_C[1])))
+            # subface.append((int(uXY_C[0]) - int(uY_C[0]), int(uXY_C[1]) - int(uY_C[1])))
+            #
+            # cv2.drawContours(img, subface, -1, self.green, 3)
+            #
+            # surface = []
+            # surface.append((int(uXZ_C[0]) - int(uZ_C[0]), int(uXZ_C[1]) - int(uZ_C[1])))
+            # surface.append((int(uYZ_C[0]) - int(uZ_C[0]), int(uYZ_C[1]) - int(uZ_C[1])))
+            # surface.append((int(uZZ_C[0]) - int(uXZ_C[0]), int(uZZ_C[1]) - int(uXZ_C[1])))
+            # surface.append((int(uZZ_C[0]) - int(uYZ_C[0]), int(uZZ_C[1]) - int(uYZ_C[1])))
+
+            # cv2.drawContours(img, surface, -1, self.red, 3)
 
             t1 *= 1000
             t2 *= 1000
@@ -55,6 +100,18 @@ class AR(object):
             cv2.putText(ar_img, text_est, (5, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 
         cv2.imshow('ar scene', ar_img)
+
+
+        def draw(img, corners, imgpts):
+            imgpts = np.int32(imgpts).reshape(-1, 2)
+            # 用绿色绘制底层
+            img = cv2.drawContours(img, [imgpts[:4]], -1, (0, 255, 0), -3)
+            # 用蓝色绘制高
+            for i, j in zip(range(4), range(4, 8)):
+                img = cv2.line(img, tuple(imgpts[i]), tuple(imgpts[j]), (255), 3)
+            # 用红色绘制顶层
+            img = cv2.drawContours(img, [imgpts[4:]], -1, (0, 0, 255), 3)
+            return img
 
 
 if __name__ == '__main__':
