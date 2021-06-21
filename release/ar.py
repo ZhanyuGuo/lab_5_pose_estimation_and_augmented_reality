@@ -22,7 +22,7 @@ class AR(object):
         self.blue = (255, 0, 0)
         pass
 
-    def update(self, img, T, K, esimator):
+    def update(self, img, T, K, esimator, t1, t2, t3):
         ar_img = img
         if esimator.isEstimate:
             T_cw = la.inv(T)
@@ -43,6 +43,16 @@ class AR(object):
             cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uX_C[0]), int(uX_C[1])), self.red, 4)
             cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uY_C[0]), int(uY_C[1])), self.green, 4)
             cv2.line(ar_img, (int(uO_C[0]), int(uO_C[1])), (int(uZ_C[0]), int(uZ_C[1])), self.blue, 4)
+
+            t1 *= 1000
+            t2 *= 1000
+            t3 *= 1000
+            t_cor = t2 - t1
+            t_est = t3 - t2
+            text_cor = "Match time(ms):    %d" % t_cor
+            text_est = "Estimate time(ms): %d" % t_est
+            cv2.putText(ar_img, text_cor, (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+            cv2.putText(ar_img, text_est, (5, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 
         cv2.imshow('ar scene', ar_img)
 

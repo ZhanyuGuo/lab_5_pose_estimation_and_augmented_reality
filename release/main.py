@@ -6,6 +6,7 @@
 # @File    : main.py
 # @Software: PyCharm
 import threading
+from time import process_time, perf_counter
 
 import cv2
 
@@ -43,17 +44,23 @@ def main():
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         undist_image = cv2.undistort(gray_frame, camera.K, camera.distort_coef)
 
+        t1 = perf_counter()
         # find correspondences, Homography and T_wc
         world_points, world_points_w, image_points, good = plane.findCorrespondences(undist_image)
+        t2 = perf_counter()
 
         h_matrix_w, mask = estimator.findHomo(world_points_w, image_points, good)
         T2 = estimator.estimate(h_matrix_w, camera.K)
+        print(T2)
+        T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
+        print(T1)
+        t3 = perf_counter()
 
         # visualize in 3D
         scene.camera_callback.setMat(T2)
 
         # ar
-        ar.update(frame, T2, camera.K, estimator)
+        ar.update(frame, T2, camera.K, estimator, t1, t2, t3)
 
         if cv2.waitKey(1) >= 0:
             break
