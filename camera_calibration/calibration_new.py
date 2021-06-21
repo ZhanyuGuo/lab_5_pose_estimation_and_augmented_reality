@@ -22,8 +22,8 @@ def plot_contrast_imgs(origin_img, converted_img, origin_img_title="origin_img",
 
 
 # 1. 参数设定:定义棋盘横向和纵向的角点个数并指定校正图像的位置
-nx = 9
-ny = 6
+nx = 6
+ny = 9
 file_paths = glob.glob("./Chessboards/*.jpg")
 
 
@@ -45,6 +45,12 @@ def cal_calibrate_params(file_paths):
         if rect == True:
             object_points.append(objp)
             image_points.append(corners)
+
+            # 绘制角点图
+            cv2.drawChessboardCorners(img, (8, 6), corners, rect)  # 记住，OpenCV的绘制函数一般无返回值
+            cv2.imshow('img_cali', img)
+            cv2.waitKey(2000)
+
     # 2.3 获取相机参数
     ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(object_points, image_points, gray.shape[::-1], None, None)
     return ret, mtx, dist, rvecs, tvecs
