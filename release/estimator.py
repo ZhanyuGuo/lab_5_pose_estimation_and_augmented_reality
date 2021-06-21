@@ -8,6 +8,7 @@
 import cv2
 import numpy as np
 from numpy import linalg as la
+from random import sample
 
 
 class Estimator(object):
@@ -34,7 +35,8 @@ class Estimator(object):
         R, _ = cv2.Rodrigues(rvec)
         tmp = np.hstack((R, tvec))
         T = np.vstack((tmp, np.array([0, 0, 0, 1])))
-        return T
+        T_wc = la.inv(T)
+        return T_wc
 
     pass
 
@@ -47,6 +49,7 @@ def pnp_estimation(src_pts, dst_pts, camera_matrix, dist_coeffs):
 def cal_homography(src_pts, dst_pts):
     if type(src_pts) == np.ndarray and type(dst_pts) == np.ndarray:
         h_matrix, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
+        # h_matrix, mask = findHomoManual(src_pts, dst_pts, 100, 100), None
     else:
         h_matrix, mask = None, None
     return h_matrix, mask
@@ -115,3 +118,46 @@ def calc_T(H1, k):
     T_cw[3, 3] = 1
     T_wc = la.inv(T_cw)
     return T_wc
+
+
+def findHomoManual(src_pts, dst_pts, N, sigama):
+    src_pts = src_pts[:, :2]
+    add_one = np.ones((len(src_pts), 1))
+    src_pts = np.column_stack((src_pts, add_one))
+
+    dst_pts = dst_pts.reshape((len(dst_pts), 2))
+    dst_pts = np.column_stack((dst_pts, add_one))
+
+    idx = list(range(len(src_pts)))
+
+    t = np.sqrt(5.99) * sigama
+    S_in = []
+    h_in = None
+
+    for _ in range(N):
+        S_tst = []
+        idx_rdm = sample(idx, 4)
+        src_rdm = src_pts[idx_rdm]
+        dst_rdm = dst_pts[idx_rdm]
+        A = np.zeros((8, 9))
+        for i in range(4):
+            x, y = src_rdm[i][0], src_rdm[i][1]
+            u, v = dst_rdm[i][0], dst_rdm[i][1]
+            A[2 * i] = np.array([0, 0, 0, -x, -y, -1, v * x, v * y, v])
+            A[2 * i + 1] = np.array([x, y, 1, 0, 0, 0, -u * x, -u * y, -u])
+
+        _, _, VT = np.linalg.svd(A)
+        V = np.transpose(VT)
+        h = V[:, -1].reshape((3, 3))
+        for i in range(len(dst_pts)):
+            e = np.linalg.norm(np.matmul(h, np.transpose(src_pts[i])) - np.transpose(dst_pts[i])) + np.linalg.norm(
+                np.transpose(src_pts[i]) - np.matmul(np.linalg.inv(h), np.transpose(dst_pts[i])))
+            if e < t:
+                S_tst.append(e)
+                pass
+            pass
+        if len(S_tst) > len(S_in):
+            S_in = S_tst
+            h_in = h
+        pass
+    return h_in

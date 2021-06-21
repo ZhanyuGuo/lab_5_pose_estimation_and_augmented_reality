@@ -45,7 +45,7 @@ def pixel2world(src_pts):
 
 
 def findFeatures(img):
-    detector = cv2.xfeatures2d.SURF_create(400)
+    detector = cv2.xfeatures2d.SURF_create(500)
     # detector = cv2.xfeatures2d.SIFT_create()
     keypoints, descriptors = detector.detectAndCompute(img, None)
     

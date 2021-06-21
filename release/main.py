@@ -50,23 +50,23 @@ def main():
         t2 = perf_counter()
 
         h_matrix_w, mask = estimator.findHomo(world_points_w, image_points, good)
+        # T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
         T2 = estimator.estimate(h_matrix_w, camera.K)
-        print(T2)
-        T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
-        print(T1)
         t3 = perf_counter()
 
         # visualize in 3D
+        # scene.camera_callback.setMat(T1)
         scene.camera_callback.setMat(T2)
 
         # ar
+        # ar.update(frame, T1, camera.K, estimator, t1, t2, t3)
         ar.update(frame, T2, camera.K, estimator, t1, t2, t3)
 
         if cv2.waitKey(1) >= 0:
             break
         pass
 
-    # frame_C = cv2.imread('../images/not_found.jpg')
+    # frame_C = cv2.imread('../images/camera_03.jpg')
     # frame = cv2.cvtColor(frame_C, cv2.COLOR_BGR2GRAY)
     # # frame = cv2.imread('../images/camera_03.jpg', cv2.IMREAD_GRAYSCALE)
     #
@@ -80,17 +80,14 @@ def main():
     #
     # # world_axis <-> pixel
     # h_matrix_w, mask = estimator.findHomo(world_points_w, image_points, good)
-    # # print(h_matrix_w)
-    # # pixel <-> pixel
-    # # h_matrix, mask = estimator.findHomo(world_points, image_points)
-    #
-    # # T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
-    # # print(T1)
+    # print(h_matrix_w)
+    # T1 = estimator.pnpEstimate(world_points_w, image_points, camera.K, camera.distort_coef)
+    # print(T1)
     #
     # T2 = estimator.estimate(h_matrix_w, camera.K)
     # print(T2)
     #
-    # ar.update(frame_C, T2, camera.K, estimator)
+    # # ar.update(frame_C, T2, camera.K, estimator)
     #
     # # set camera in 3d scene
     # # scene.camera_callback.setMat(T2)
