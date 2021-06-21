@@ -146,6 +146,7 @@ class Scene(object):
                 obj_mat.SetElement(i, j, mat[i, j])
 
         self.cameraActor.SetUserMatrix(obj_mat)
+        self.iren.Render()
 
 
 class CameraCallback(object):
