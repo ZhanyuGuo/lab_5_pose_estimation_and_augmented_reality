@@ -30,7 +30,6 @@ class Estimator(object):
 
     def pnpEstimate(self, src_pts, dst_pts, camera_matrix, dist_coeffs):
         rvec, tvec = pnp_estimation(src_pts, dst_pts, camera_matrix, dist_coeffs)
-        rvec = np.degrees(rvec)
 
         R, _ = cv2.Rodrigues(rvec)
         tmp = np.hstack((R, tvec))
