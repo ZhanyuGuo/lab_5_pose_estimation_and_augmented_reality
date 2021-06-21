@@ -22,8 +22,8 @@ def plot_contrast_imgs(origin_img, converted_img, origin_img_title="origin_img",
 
 
 # 1. 参数设定:定义棋盘横向和纵向的角点个数并指定校正图像的位置
-nx = 6
-ny = 9
+nx = 9
+ny = 6
 file_paths = glob.glob("./Chessboards/*.jpg")
 
 
@@ -35,6 +35,7 @@ def cal_calibrate_params(file_paths):
     objp = np.zeros((nx * ny, 3), np.float32)
     objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
     # 2.2 检测每幅图像角点坐标
+    i = 0
     for file_path in file_paths:
         img = cv2.imread(file_path)
         # 将图像转换为灰度图
@@ -42,13 +43,17 @@ def cal_calibrate_params(file_paths):
         # 自动检测棋盘格内4个棋盘格的角点（2白2黑的交点）
         rect, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
         # 若检测到角点，则将其存储到object_points和image_points
+
         if rect == True:
-            object_points.append(objp)
+            object_points.append(objp)  # 要求输入的objectPoints的为平面标定模式，即Z轴都为零，否则会出错
             image_points.append(corners)
 
             # 绘制角点图
-            cv2.drawChessboardCorners(img, (8, 6), corners, rect)  # 记住，OpenCV的绘制函数一般无返回值
+            # cv2.drawChessboardCorners(img, (8, 6), corners, rect)  # 记住，OpenCV的绘制函数一般无返回值
+            cv2.drawChessboardCorners(img, (9, 6), corners, rect)  # 记住，OpenCV的绘制函数一般无返回值
             cv2.imshow('img_cali', img)
+            i += 1
+            # cv2.imwrite('img%d.jpg' % i, img)
             cv2.waitKey(2000)
 
     # 2.3 获取相机参数
