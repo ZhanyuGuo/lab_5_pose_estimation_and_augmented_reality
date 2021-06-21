@@ -17,8 +17,8 @@ class Plane(object):
 
     def findCorrespondences(self, frame):
         self.kp2, self.desc2 = findFeatures(frame)
-        # brute_force_match(BFM)
-        # src_pts, dst_pts, good = brute_force_match(self.kp1, self.kp2, self.desc1, self.desc2)
+        # bruteForceMath(BFM)
+        # src_pts, dst_pts, good = bruteForceMath(self.kp1, self.kp2, self.desc1, self.desc2)
 
         # flannMatch(knn)
         src_pts, dst_pts, good = flannMatch(self.kp1, self.kp2, self.desc1, self.desc2)
@@ -52,7 +52,7 @@ def findFeatures(img):
     return keypoints, descriptors
 
 
-def brute_force_match(kp1, kp2, desc1, desc2, min_match_count=10):
+def bruteForceMath(kp1, kp2, desc1, desc2, min_match_count=10):
     matcher = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
     matches = matcher.match(desc1, desc2)
     matches = sorted(matches, key=lambda x: x.distance)
@@ -72,7 +72,7 @@ def brute_force_match(kp1, kp2, desc1, desc2, min_match_count=10):
 
 
 def flannMatch(kp1, kp2, desc1, desc2):
-    FLANN_INDEX_KDTREE = 0
+    FLANN_INDEX_KDTREE = 1
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
 
