@@ -73,22 +73,6 @@ class AR(object):
             # cv2.line(ar_img, (int(uZZ_C[0]), int(uZZ_C[1])), (int(uYZ_C[0]), int(uYZ_C[1])), self.red, 4)
             # cv2.line(ar_img, (int(uZZ_C[0]), int(uZZ_C[1])), (int(uXZ_C[0]), int(uXZ_C[1])), self.red, 4)
 
-            # subface = []
-            # subface.append((int(uX_C[0]) - int(uO_C[0]), int(uX_C[1]) - int(uO_C[1])))
-            # subface.append((int(uY_C[0]) - int(uO_C[0]), int(uY_C[1]) - int(uO_C[1])))
-            # subface.append((int(uXY_C[0]) - int(uX_C[0]), int(uXY_C[1]) - int(uX_C[1])))
-            # subface.append((int(uXY_C[0]) - int(uY_C[0]), int(uXY_C[1]) - int(uY_C[1])))
-            #
-            # cv2.drawContours(img, subface, -1, self.green, 3)
-            #
-            # surface = []
-            # surface.append((int(uXZ_C[0]) - int(uZ_C[0]), int(uXZ_C[1]) - int(uZ_C[1])))
-            # surface.append((int(uYZ_C[0]) - int(uZ_C[0]), int(uYZ_C[1]) - int(uZ_C[1])))
-            # surface.append((int(uZZ_C[0]) - int(uXZ_C[0]), int(uZZ_C[1]) - int(uXZ_C[1])))
-            # surface.append((int(uZZ_C[0]) - int(uYZ_C[0]), int(uZZ_C[1]) - int(uYZ_C[1])))
-
-            # cv2.drawContours(img, surface, -1, self.red, 3)
-
             t1 *= 1000
             t2 *= 1000
             t3 *= 1000
