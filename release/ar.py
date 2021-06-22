@@ -101,17 +101,6 @@ class AR(object):
 
         cv2.imshow('ar scene', ar_img)
 
-        def draw(img, corners, imgpts):
-            imgpts = np.int32(imgpts).reshape(-1, 2)
-            # 用绿色绘制底层
-            img = cv2.drawContours(img, [imgpts[:4]], -1, (0, 255, 0), -3)
-            # 用蓝色绘制高
-            for i, j in zip(range(4), range(4, 8)):
-                img = cv2.line(img, tuple(imgpts[i]), tuple(imgpts[j]), (255), 3)
-            # 用红色绘制顶层
-            img = cv2.drawContours(img, [imgpts[4:]], -1, (0, 0, 255), 3)
-            return img
-
 
 if __name__ == '__main__':
     # ar = AR(25)  # 以mm为单位
