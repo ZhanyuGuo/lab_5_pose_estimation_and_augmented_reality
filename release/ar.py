@@ -101,7 +101,6 @@ class AR(object):
 
         cv2.imshow('ar scene', ar_img)
 
-
         def draw(img, corners, imgpts):
             imgpts = np.int32(imgpts).reshape(-1, 2)
             # 用绿色绘制底层
