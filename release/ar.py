@@ -73,22 +73,6 @@ class AR(object):
             # cv2.line(ar_img, (int(uZZ_C[0]), int(uZZ_C[1])), (int(uYZ_C[0]), int(uYZ_C[1])), self.red, 4)
             # cv2.line(ar_img, (int(uZZ_C[0]), int(uZZ_C[1])), (int(uXZ_C[0]), int(uXZ_C[1])), self.red, 4)
 
-            # subface = []
-            # subface.append((int(uX_C[0]) - int(uO_C[0]), int(uX_C[1]) - int(uO_C[1])))
-            # subface.append((int(uY_C[0]) - int(uO_C[0]), int(uY_C[1]) - int(uO_C[1])))
-            # subface.append((int(uXY_C[0]) - int(uX_C[0]), int(uXY_C[1]) - int(uX_C[1])))
-            # subface.append((int(uXY_C[0]) - int(uY_C[0]), int(uXY_C[1]) - int(uY_C[1])))
-            #
-            # cv2.drawContours(img, subface, -1, self.green, 3)
-            #
-            # surface = []
-            # surface.append((int(uXZ_C[0]) - int(uZ_C[0]), int(uXZ_C[1]) - int(uZ_C[1])))
-            # surface.append((int(uYZ_C[0]) - int(uZ_C[0]), int(uYZ_C[1]) - int(uZ_C[1])))
-            # surface.append((int(uZZ_C[0]) - int(uXZ_C[0]), int(uZZ_C[1]) - int(uXZ_C[1])))
-            # surface.append((int(uZZ_C[0]) - int(uYZ_C[0]), int(uZZ_C[1]) - int(uYZ_C[1])))
-
-            # cv2.drawContours(img, surface, -1, self.red, 3)
-
             t1 *= 1000
             t2 *= 1000
             t3 *= 1000
@@ -100,17 +84,6 @@ class AR(object):
             cv2.putText(ar_img, text_est, (5, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 
         cv2.imshow('ar scene', ar_img)
-
-        def draw(img, corners, imgpts):
-            imgpts = np.int32(imgpts).reshape(-1, 2)
-            # 用绿色绘制底层
-            img = cv2.drawContours(img, [imgpts[:4]], -1, (0, 255, 0), -3)
-            # 用蓝色绘制高
-            for i, j in zip(range(4), range(4, 8)):
-                img = cv2.line(img, tuple(imgpts[i]), tuple(imgpts[j]), (255), 3)
-            # 用红色绘制顶层
-            img = cv2.drawContours(img, [imgpts[4:]], -1, (0, 0, 255), 3)
-            return img
 
 
 if __name__ == '__main__':
